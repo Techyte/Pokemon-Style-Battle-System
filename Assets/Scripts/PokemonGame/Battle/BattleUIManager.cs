@@ -35,6 +35,9 @@ namespace PokemonGame.Battle
 
         [SerializeField] private List<Item> faintedRequiredItems = new List<Item>();
 
+        public Transform playerBattler => currentBattlerRenderer.transform;
+        public Transform opponentBattler => opponentBattlerRenderer.transform;
+        
         public Battle battle;
 
         private Item _playerItemToUse;

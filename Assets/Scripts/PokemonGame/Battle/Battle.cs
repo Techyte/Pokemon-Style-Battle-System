@@ -54,6 +54,8 @@ namespace PokemonGame.Battle
 
         [SerializeField] private TextAsset battlerUsedText;
 
+        [SerializeField] private ParticleSystem spawnEffect;
+
         [Space]
         [Header("Main Readouts")]
         public int currentBattlerIndex;
@@ -115,6 +117,8 @@ namespace PokemonGame.Battle
         
         EventHandler<BattlerTookDamageArgs> opponentBattlerDefeated = null;
 
+        EventHandler<BattlerTookDamageArgs> playerBattlerDefeated = null;
+        
         private Item _playerItemToUse;
         private int _battlerToUseItemOn;
         private bool _useItemOnPlayerParty;
@@ -138,8 +142,8 @@ namespace PokemonGame.Battle
                 _opponentName = SceneLoader.GetVariable<string>("opponentName");
             }
 
-            currentBattlerIndex = 0;
-            opponentBattlerIndex = 0;
+            ChangePlayerBattlerIndex(0);
+            ChangeOpponentEnemyBattlerIndex(0);
 
             DialogueManager.instance.DialogueEnded += DialogueEnded;
             playerParty.PartyAllDefeated += PlayerPartyAllDefeated;
@@ -150,6 +154,19 @@ namespace PokemonGame.Battle
             for (int i = 0; i < opponentParty.Count; i++)
             {
                 opponentParty[i].OnFainted += opponentBattlerDefeated;
+            }
+
+            playerBattlerDefeated = (s, e) =>
+            {
+                if (playerCurrentBattler.isFainted)
+                {
+                    PlayerBattlerDied();
+                }
+            };
+            
+            for (int i = 0; i < playerParty.Count; i++)
+            {
+                playerParty[i].OnFainted += playerBattlerDefeated;
             }
             
             // adds current battler to list of participating battlers
@@ -258,6 +275,7 @@ namespace PokemonGame.Battle
                 }
                 else if (_playerChoseToSwap)
                 {
+                    Debug.Log("player want to swap");
                     turnItemQueue.Add(TurnItem.PlayerSwap);
                 }
                 else if (_playerCatchThisTurn)
@@ -268,6 +286,9 @@ namespace PokemonGame.Battle
                 {
                     turnItemQueue.Add(TurnItem.PlayerItem);
                 }
+                
+                Debug.Log(_playerWantsToSwap);
+                
                 turnItemQueue.Add(TurnItem.StartOfTurnStatusEffects);
                 QueueMoves();
                 turnItemQueue.Add(TurnItem.EndOfTurnStatusEffects);
@@ -531,9 +552,23 @@ namespace PokemonGame.Battle
             uiManager.SwitchBattlerBecauseOfDeath();
         }
 
+        private void ChangePlayerBattlerIndex(int index)
+        {
+            currentBattlerIndex = index;
+            Instantiate(spawnEffect, uiManager.playerBattler.transform.position, Quaternion.identity,
+                uiManager.playerBattler);
+        }
+
+        private void ChangeOpponentEnemyBattlerIndex(int index)
+        {
+            opponentBattlerIndex = index;
+            Instantiate(spawnEffect, uiManager.opponentBattler.transform.position, Quaternion.identity,
+                uiManager.opponentBattler);
+        }
+
         private void PlayerSwappedBattler()
         {
-            currentBattlerIndex = _playerSwapIndex;
+            ChangePlayerBattlerIndex(_playerSwapIndex);
             
             AddParticipatedBattler(playerParty[_playerSwapIndex]);
 
@@ -581,7 +616,7 @@ namespace PokemonGame.Battle
 
         private void QueueMoves()
         {
-            if (_playerSwappedThisTurn || _playerUsedItemThisTurn || _playerCatchThisTurn)
+            if (_playerSwappedThisTurn || _playerUsedItemThisTurn || _playerCatchThisTurn || _playerChoseToSwap)
             {
                 AddOpponentMoveToQueue();
 
