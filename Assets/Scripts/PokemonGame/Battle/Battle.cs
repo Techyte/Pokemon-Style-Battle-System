@@ -56,6 +56,8 @@ namespace PokemonGame.Battle
 
         [SerializeField] private ParticleSystem spawnEffect;
 
+        [SerializeField] private float shrinkEffectDelay;
+
         [Space]
         [Header("Main Readouts")]
         public int currentBattlerIndex;
@@ -142,8 +144,8 @@ namespace PokemonGame.Battle
                 _opponentName = SceneLoader.GetVariable<string>("opponentName");
             }
 
-            ChangePlayerBattlerIndex(0);
-            ChangeOpponentEnemyBattlerIndex(0);
+            ChangePlayerBattlerIndex(0, true);
+            ChangeOpponentEnemyBattlerIndex(0, true);
 
             DialogueManager.instance.DialogueEnded += DialogueEnded;
             playerParty.PartyAllDefeated += PlayerPartyAllDefeated;
@@ -552,18 +554,58 @@ namespace PokemonGame.Battle
             uiManager.SwitchBattlerBecauseOfDeath();
         }
 
-        private void ChangePlayerBattlerIndex(int index)
+        private void ChangePlayerBattlerIndex(int index, bool skipShrink = false)
         {
+            if (!skipShrink)
+            {
+                uiManager.ShrinkPlayerBattler();
+                StartCoroutine(DelayChangeBattlerIndex(index));
+            }
+            else
+            {
+                currentBattlerIndex = index;
+                Instantiate(spawnEffect, uiManager.playerBattler.transform.position, spawnEffect.transform.rotation,
+                    uiManager.playerBattler);
+                uiManager.ExpandPlayerBattler();
+                uiManager.UpdatePlayerBattlerDetails();
+            }
+        }
+
+        private IEnumerator DelayChangeBattlerIndex(int index)
+        {
+            yield return new WaitForSeconds(shrinkEffectDelay);
             currentBattlerIndex = index;
             Instantiate(spawnEffect, uiManager.playerBattler.transform.position, spawnEffect.transform.rotation,
                 uiManager.playerBattler);
+            uiManager.ExpandPlayerBattler();
+            uiManager.UpdatePlayerBattlerDetails();
         }
 
-        private void ChangeOpponentEnemyBattlerIndex(int index)
+        private void ChangeOpponentEnemyBattlerIndex(int index, bool skipShrink = false)
         {
+            if (!skipShrink)
+            {
+                uiManager.ShrinkOpponentBattler();
+                StartCoroutine(DelayChangeOpponentBattlerIndex(index));
+            }
+            else
+            {
+                opponentBattlerIndex = index;
+                Instantiate(spawnEffect, uiManager.opponentBattler.transform.position, spawnEffect.transform.rotation,
+                    uiManager.opponentBattler);
+                uiManager.ExpandOpponentBattler();
+                uiManager.UpdateOpponentBattlerDetails();
+            }
+        }
+
+        private IEnumerator DelayChangeOpponentBattlerIndex(int index)
+        {
+            yield return new WaitForSeconds(shrinkEffectDelay);
             opponentBattlerIndex = index;
             Instantiate(spawnEffect, uiManager.opponentBattler.transform.position, spawnEffect.transform.rotation,
                 uiManager.opponentBattler);
+            uiManager.ExpandOpponentBattler();
+            uiManager.UpdateOpponentBattlerDetails();
         }
 
         private void PlayerSwappedBattler()
@@ -578,7 +620,7 @@ namespace PokemonGame.Battle
             
             _playerSwappedThisTurn = true;
             
-            QueDialogue($"Go ahead {playerCurrentBattler.name}!", true);
+            QueDialogue($"Go ahead {playerParty[_playerSwapIndex].name}!", true);
         }
 
         private void PlayerParalysed()
@@ -606,12 +648,12 @@ namespace PokemonGame.Battle
             MoveMethodEventArgs e = new MoveMethodEventArgs(playerCurrentBattler, opponentCurrentBattler,
                 playerMoveToDoIndex, playerMoveToDo, ExternalBattleData.Construct(this));
             
+            DialogueHurt(playerCurrentBattler.name, playerMoveToDo.name, opponentCurrentBattler.name,
+                e.damageDealt.ToString());
+            
             playerMoveToDo.MoveMethod(e);
             
             opponentCurrentBattler.TakeDamage(e.damageDealt, new BattlerDamageSource(playerCurrentBattler));
-
-            DialogueHurt(playerCurrentBattler.name, playerMoveToDo.name, opponentCurrentBattler.name,
-                e.damageDealt.ToString());
         }
 
         private void QueueMoves()
@@ -698,12 +740,12 @@ namespace PokemonGame.Battle
             MoveMethodEventArgs e = new MoveMethodEventArgs(opponentCurrentBattler, playerCurrentBattler, moveToDoIndex,
                 enemyMoveToDo, ExternalBattleData.Construct(this));
             
+            DialogueHurt(opponentCurrentBattler.name, enemyMoveToDo.name, playerCurrentBattler.name,
+                e.damageDealt.ToString());
+            
             enemyMoveToDo.MoveMethod(e);
             
             playerCurrentBattler.TakeDamage(e.damageDealt, new BattlerDamageSource(opponentCurrentBattler));
-            
-            DialogueHurt(opponentCurrentBattler.name, enemyMoveToDo.name, playerCurrentBattler.name,
-                e.damageDealt.ToString());
             
             if (playerCurrentBattler.isFainted)
             {

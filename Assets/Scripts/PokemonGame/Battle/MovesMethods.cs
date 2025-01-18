@@ -119,6 +119,7 @@ namespace PokemonGame.Battle
         public void Toxic(MoveMethodEventArgs e)
         {
             e.target.statusEffect = Registry.GetStatusEffect("Poisoned");
+            Battle.Singleton.QueDialogue($"{e.target.name} was poisoned!", true);
         }
 
         public void Ember(MoveMethodEventArgs e)

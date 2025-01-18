@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PokemonGame.ScriptableObjects;
 
@@ -32,6 +33,7 @@ namespace PokemonGame.Battle
         [SerializeField] private TextMeshProUGUI currentBattlerNameDisplay;
         [SerializeField] private TextMeshProUGUI opponentBattlerNameDisplay;
         [SerializeField] private BattleBagMenu battleBagMenu;
+        [SerializeField] private float shrinkEffectSpeed = 1;
 
         [SerializeField] private List<Item> faintedRequiredItems = new List<Item>();
 
@@ -41,6 +43,24 @@ namespace PokemonGame.Battle
         public Battle battle;
 
         private Item _playerItemToUse;
+
+        private Vector3 _initialPlayerScale;
+        private Vector3 _initialOpponentScale;
+
+        [SerializeField] private Vector3 _targetPlayerBattlerScale;
+        [SerializeField] private Vector3 _targetOpponentBattlerScale;
+
+        private void Awake()
+        {
+            _initialPlayerScale = currentBattlerRenderer.transform.localScale;
+            _initialOpponentScale = opponentBattlerRenderer.transform.localScale;
+            
+            _targetPlayerBattlerScale = _initialPlayerScale;
+            _targetOpponentBattlerScale = _initialOpponentScale;
+            
+            currentBattlerRenderer.transform.localScale = Vector3.zero;
+            opponentBattlerRenderer.transform.localScale = Vector3.zero;
+        }
 
         private void Start()
         {
@@ -61,6 +81,12 @@ namespace PokemonGame.Battle
         private void Update()
         {
             UpdateHealthDisplays();
+
+            currentBattlerRenderer.transform.localScale = Vector3.Lerp(currentBattlerRenderer.transform.localScale,
+                _targetPlayerBattlerScale, shrinkEffectSpeed * Time.deltaTime);
+
+            opponentBattlerRenderer.transform.localScale = Vector3.Lerp(opponentBattlerRenderer.transform.localScale,
+                _targetOpponentBattlerScale, shrinkEffectSpeed * Time.deltaTime);
         }
 
         private void UpdateBattlerButtons()
@@ -137,12 +163,31 @@ namespace PokemonGame.Battle
             }
         }
 
-
         public void ShowUI(bool show)
         {
             playerUIHolder.SetActive(show);
             ShowControlUI(show);
             healthDisplays.SetActive(show);
+        }
+
+        public void ShrinkPlayerBattler()
+        {
+            _targetPlayerBattlerScale = Vector3.zero;
+        }
+
+        public void ExpandPlayerBattler()
+        {
+            _targetPlayerBattlerScale = _initialPlayerScale;
+        }
+
+        public void ShrinkOpponentBattler()
+        {
+            _targetOpponentBattlerScale = Vector3.zero;
+        }
+
+        public void ExpandOpponentBattler()
+        {
+            _targetOpponentBattlerScale = _initialOpponentScale;
         }
 
         public void ShowControlUI(bool show)
