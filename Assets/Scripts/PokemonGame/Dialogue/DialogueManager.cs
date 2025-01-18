@@ -90,7 +90,7 @@ namespace PokemonGame.Dialogue
                 }
             }
             
-            if ((Input.GetKeyDown(KeyCode.C) || Input.GetMouseButtonDown(0)) && !hasChoices)
+            if ((Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)) && !hasChoices)
             {
                 ContinueStory();
             }

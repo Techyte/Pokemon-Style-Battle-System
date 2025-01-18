@@ -102,7 +102,7 @@ namespace PokemonGame.NPC
                     if (!DialogueManager.instance.dialogueIsPlaying)
                     {
                         visualCue.SetActive(true);
-                        if (Input.GetKeyDown(KeyCode.C))
+                        if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.E))
                         {
                             OnPlayerInteracted();
                         }

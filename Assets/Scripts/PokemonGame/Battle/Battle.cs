@@ -555,14 +555,14 @@ namespace PokemonGame.Battle
         private void ChangePlayerBattlerIndex(int index)
         {
             currentBattlerIndex = index;
-            Instantiate(spawnEffect, uiManager.playerBattler.transform.position, Quaternion.identity,
+            Instantiate(spawnEffect, uiManager.playerBattler.transform.position, spawnEffect.transform.rotation,
                 uiManager.playerBattler);
         }
 
         private void ChangeOpponentEnemyBattlerIndex(int index)
         {
             opponentBattlerIndex = index;
-            Instantiate(spawnEffect, uiManager.opponentBattler.transform.position, Quaternion.identity,
+            Instantiate(spawnEffect, uiManager.opponentBattler.transform.position, spawnEffect.transform.rotation,
                 uiManager.opponentBattler);
         }
 
