@@ -142,6 +142,7 @@ namespace PokemonGame.Battle
         {
             int damage = CalculateDamage(e);
             e.damageDealt = damage;
+            Battle.Singleton.QueDialogue($"{e.attacker.name} healed {damage/2} health!");
             e.attacker.Heal(damage/2);
         }
 

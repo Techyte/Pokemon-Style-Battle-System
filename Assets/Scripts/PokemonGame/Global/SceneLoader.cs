@@ -1,5 +1,4 @@
-using PokemonGame.Dialogue;
-using Unity.VisualScripting;
+using PokemonGame.Game;
 
 namespace PokemonGame.Global
 {
@@ -32,6 +31,7 @@ namespace PokemonGame.Global
             ClearLoader();
             _vars = newVars;
             sceneLoadedFrom = SceneManager.GetActiveScene().name;
+            OptionsMenu.instance.CloseMenu();
             SceneManager.LoadScene(sceneToLoadIndex);   
         }
 
@@ -43,6 +43,7 @@ namespace PokemonGame.Global
         {
             ClearLoader();
             sceneLoadedFrom = SceneManager.GetActiveScene().name;
+            OptionsMenu.instance.CloseMenu();
             SceneManager.LoadScene(sceneToLoadIndex); 
         }
 
@@ -54,6 +55,7 @@ namespace PokemonGame.Global
         {
             ClearLoader();
             sceneLoadedFrom = SceneManager.GetActiveScene().name;
+            OptionsMenu.instance.CloseMenu();
             SceneManager.LoadScene(sceneToLoadName);   
         }
     
@@ -68,6 +70,7 @@ namespace PokemonGame.Global
             ClearLoader();
             _vars = newVars;
             sceneLoadedFrom = SceneManager.GetActiveScene().name;
+            OptionsMenu.instance.CloseMenu();
             SceneManager.LoadScene(sceneToLoadName);
         }
     

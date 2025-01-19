@@ -1,3 +1,3 @@
 INCLUDE ../globals.ink
 
-{battlerUsed} used {moveUsed} on {battlerHit}, dealing {damageDealt} damage!
+{battlerUsed} used {moveUsed} on {battlerHit}!

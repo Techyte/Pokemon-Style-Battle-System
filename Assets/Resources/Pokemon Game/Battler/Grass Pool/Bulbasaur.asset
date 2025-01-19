@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Bulbasaur
   m_EditorClassIdentifier: 
   source: {fileID: 11400000, guid: f98dd2fa32827594da82f4b72db0840f, type: 2}
-  level: 1
+  level: 5
   name: Bulbasaur
-  maxHealth: 6
+  maxHealth: 10
   currentHealth: 5
   catchRate: 0
   exp: 0
-  attack: 6
-  defense: 6
-  specialAttack: 6
-  specialDefense: 6
-  speed: 6
+  attack: 10
+  defense: 10
+  specialAttack: 12
+  specialDefense: 12
+  speed: 10
   texture: {fileID: 21300000, guid: 172c0180b1b30a44ab24fa8d177bfb43, type: 3}
   isFainted: 0
   statusEffect: {fileID: 11400000, guid: 70a8b2171523288439f255c2f97685d9, type: 2}

@@ -207,10 +207,9 @@ namespace PokemonGame.General
         /// <returns>Weather the battler was able to learn the move</returns>
         public bool LearnMove(Move moveToLearn)
         {
-            if (moves.Count < 4 && CanLearn(moveToLearn))
+            if (moves.Count < 4)
             {
                 moves.Add(moveToLearn);
-                Debug.Log(moves.Count);
                 movePpInfos.Add(new MovePPData(moveToLearn.basePP, moveToLearn.basePP));
                 return true;
             }
@@ -337,7 +336,6 @@ namespace PokemonGame.General
                     returnBattler.LearnMove(move);
                 }
             }
-            Debug.Log(returnBattler.moves.Count);
             
             returnBattler.UpdateStats();
 

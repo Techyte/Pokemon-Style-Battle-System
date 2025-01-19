@@ -170,9 +170,13 @@ namespace PokemonGame.Battle
             healthDisplays.SetActive(show);
         }
 
-        public void ShrinkPlayerBattler()
+        public void ShrinkPlayerBattler(bool instant = false)
         {
             _targetPlayerBattlerScale = Vector3.zero;
+            if (instant)
+            {
+                opponentBattlerRenderer.transform.localScale = Vector3.zero;
+            }
         }
 
         public void ExpandPlayerBattler()
@@ -180,9 +184,13 @@ namespace PokemonGame.Battle
             _targetPlayerBattlerScale = _initialPlayerScale;
         }
 
-        public void ShrinkOpponentBattler()
+        public void ShrinkOpponentBattler(bool instant = false)
         {
             _targetOpponentBattlerScale = Vector3.zero;
+            if (instant)
+            {
+                opponentBattlerRenderer.transform.localScale = Vector3.zero;
+            }
         }
 
         public void ExpandOpponentBattler()
@@ -350,8 +358,10 @@ namespace PokemonGame.Battle
 
             for (var i = 0; i < battle.playerParty[battle.currentBattlerIndex].moves.Count; i++)
             {
+                Debug.Log($"at the {i} move");
                 if (battle.playerParty[battle.currentBattlerIndex].moves[i])
                 {
+                    Debug.Log($"{i} move exists");
                     int currentPP = battle.playerParty[battle.currentBattlerIndex].movePpInfos[i].CurrentPP;
                     int maxPP = battle.playerParty[battle.currentBattlerIndex].movePpInfos[i].MaxPP;
                     

@@ -56,7 +56,7 @@ namespace PokemonGame.Game
         
         private void Update()
         {
-            if (Input.GetKeyDown(bagKey) && !DialogueManager.instance.dialogueIsPlaying)
+            if (Input.GetKeyDown(bagKey) && !DialogueManager.instance.dialogueIsPlaying && SceneManager.GetActiveScene().name != "Battle")
             {
                 ToggleMenu();
             }
@@ -79,6 +79,14 @@ namespace PokemonGame.Game
             menuObject.SetActive(state);
             Cursor.visible = state;
             Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        public void CloseMenu()
+        {
+            if (state)
+            {
+                ToggleMenu();
+            }
         }
     }   
 }

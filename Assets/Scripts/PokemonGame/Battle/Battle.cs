@@ -385,13 +385,12 @@ namespace PokemonGame.Battle
             currentTurn = TurnStatus.Ending;
         }
 
-        private void DialogueHurt(string battlerUsed, string moveUsed, string battlerHit, string damageDealt)
+        private void DialogueMoveUsed(string battlerUsed, string moveUsed, string battlerHit)
         {
             Dictionary<string, string> variables = new Dictionary<string, string>();
             variables.Add("battlerUsed", battlerUsed);
             variables.Add("moveUsed", moveUsed);
             variables.Add("battlerHit", battlerHit);
-            variables.Add("damageDealt", damageDealt);
             
             QueDialogue(battlerUsedText, true, variables);
         }
@@ -477,6 +476,7 @@ namespace PokemonGame.Battle
             _playerCatchThisTurn = true;
             playerHasChosenMove = true;
             _playerItemToUse = ball;
+            Bag.Used(ball);
         }
 
         public void PlayerPickedItemToUse(Item item)
@@ -510,6 +510,7 @@ namespace PokemonGame.Battle
 
             if (expCalculator.Captured(opponentCurrentBattler, (PokeBall)_playerItemToUse))
             {
+                uiManager.ShrinkOpponentBattler(true);
                 QueDialogue($"Caught {opponentCurrentBattler.name}!");
                 PartyManager.AddBattler(opponentCurrentBattler);
                 turnItemQueue.Insert(0, TurnItem.EndBattlePlayerWin);
@@ -535,13 +536,13 @@ namespace PokemonGame.Battle
 
         public void ChooseToSwap(int newBattlerIndex)
         {
-            if (_currentlyRunningQueueItem)
+            if (_currentlyRunningQueueItem) // swapping mid turn showing aka after a battler faints
             {
                 _playerWantsToSwap = true;
                 _playerSwapIndex = newBattlerIndex;
                 QueDialogue($"You sent out {playerParty[newBattlerIndex].name}", true);
             }
-            else
+            else // player chose to swap as their move
             {
                 _playerSwapIndex = newBattlerIndex;
                 playerHasChosenMove = true;
@@ -648,8 +649,7 @@ namespace PokemonGame.Battle
             MoveMethodEventArgs e = new MoveMethodEventArgs(playerCurrentBattler, opponentCurrentBattler,
                 playerMoveToDoIndex, playerMoveToDo, ExternalBattleData.Construct(this));
             
-            DialogueHurt(playerCurrentBattler.name, playerMoveToDo.name, opponentCurrentBattler.name,
-                e.damageDealt.ToString());
+            DialogueMoveUsed(playerCurrentBattler.name, playerMoveToDo.name, opponentCurrentBattler.name);
             
             playerMoveToDo.MoveMethod(e);
             
@@ -740,17 +740,11 @@ namespace PokemonGame.Battle
             MoveMethodEventArgs e = new MoveMethodEventArgs(opponentCurrentBattler, playerCurrentBattler, moveToDoIndex,
                 enemyMoveToDo, ExternalBattleData.Construct(this));
             
-            DialogueHurt(opponentCurrentBattler.name, enemyMoveToDo.name, playerCurrentBattler.name,
-                e.damageDealt.ToString());
+            DialogueMoveUsed(opponentCurrentBattler.name, enemyMoveToDo.name, playerCurrentBattler.name);
             
             enemyMoveToDo.MoveMethod(e);
             
             playerCurrentBattler.TakeDamage(e.damageDealt, new BattlerDamageSource(opponentCurrentBattler));
-            
-            if (playerCurrentBattler.isFainted)
-            {
-                PlayerBattlerDied();
-            }
         }
 
         private void PlayerBattlerDied()

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5aad296ed7fa84eacb82768c04ccc9, type: 3}
   m_Name: Razor Leaf
   m_EditorClassIdentifier: 
-  name: RazorLeaf
+  name: Razor Leaf
   type: {fileID: 11400000, guid: 16677bacbe9d55246878c477b58016ba, type: 2}
   damage: 55
   basePP: 25
