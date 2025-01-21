@@ -175,7 +175,7 @@ namespace PokemonGame.Battle
             _targetPlayerBattlerScale = Vector3.zero;
             if (instant)
             {
-                opponentBattlerRenderer.transform.localScale = Vector3.zero;
+                currentBattlerRenderer.transform.localScale = Vector3.zero;
             }
         }
 
@@ -323,16 +323,6 @@ namespace PokemonGame.Battle
         {
             currentBattlerRenderer.sprite = battle.playerParty[battle.currentBattlerIndex].texture;
             opponentBattlerRenderer.sprite = battle.opponentParty[battle.opponentBattlerIndex].texture;
-            
-            if (battle.playerParty[battle.currentBattlerIndex].isFainted)
-            {
-                currentBattlerRenderer.sprite = null;
-            }
-            
-            if (battle.opponentParty[battle.opponentBattlerIndex].isFainted)
-            {
-                opponentBattlerRenderer.sprite = null;
-            }
         }
 
         public void UpdatePlayerBattlerDetails()

@@ -38,6 +38,7 @@ namespace PokemonGame.ScriptableObjects
     {
         public Battler target;
         public Item item;
+        public bool success;
 
         public ItemMethodEventArgs(Battler target, Item item)
         {

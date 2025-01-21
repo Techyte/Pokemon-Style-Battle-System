@@ -31,7 +31,7 @@ namespace PokemonGame.General
         {
             float statusBonus = 1;
 
-            if (target.asleep || target.frozen)
+            if (target.statusEffect.name == "Asleep" || target.statusEffect.name == "Frozen")
             {
                 statusBonus = 2;
             }

@@ -79,10 +79,6 @@ namespace PokemonGame.General
         /// </summary>
         public StatusEffect statusEffect;
 
-        public bool frozen = false;
-        
-        public bool asleep = false;
-
         /// <summary>
         /// The primary type of the battler
         /// </summary>
@@ -359,8 +355,6 @@ namespace PokemonGame.General
 
             returnBattler.currentHealth = battler.currentHealth;
             returnBattler.isFainted = battler.isFainted;
-            returnBattler.frozen = battler.frozen;
-            returnBattler.asleep = battler.asleep;
             
             return returnBattler;
         }

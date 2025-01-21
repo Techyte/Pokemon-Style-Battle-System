@@ -1,3 +1,5 @@
+using PokemonGame.ScriptableObjects;
+
 namespace PokemonGame.Trainers
 {
     using System;
@@ -5,11 +7,9 @@ namespace PokemonGame.Trainers
     using System.Collections.Generic;
     using General;
     using Global;
-    using ScriptableObjects;
     using UnityEngine;
     using Game.Party;
     using Game;
-    using Game.World;
     using NPC;
 
     /// <summary>

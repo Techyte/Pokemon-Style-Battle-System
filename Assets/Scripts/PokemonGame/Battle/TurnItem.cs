@@ -8,6 +8,7 @@ namespace PokemonGame.Battle
         PlayerSwapBecauseFainted,
         PlayerSwap,
         OpponentSwap,
+        OpponentSwapBecauseFainted,
         PlayerItem,
         OpponentItem,
         EndBattlePlayerWin,

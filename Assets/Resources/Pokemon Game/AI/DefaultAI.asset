@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e3d5a1cd7ae35040a57065ec7311dfd, type: 3}
+  m_Script: {fileID: 11500000, guid: 304f501ebe8d0fe47b8502f4e09cd327, type: 3}
   m_Name: DefaultAI
   m_EditorClassIdentifier: 
   name: DefaultAI
@@ -19,6 +19,21 @@ MonoBehaviour:
       - m_Target: {fileID: 11400000, guid: c1323aee68c18a643b2cfc130a46749a, type: 2}
         m_TargetAssemblyTypeName: PokemonGame.Battle.EnemyAIMethods, Assembly-CSharp
         m_MethodName: DefaultAI
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  aISwitchEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: c1323aee68c18a643b2cfc130a46749a, type: 2}
+        m_TargetAssemblyTypeName: PokemonGame.Battle.EnemyAIMethods, Assembly-CSharp
+        m_MethodName: SwitchBattler
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

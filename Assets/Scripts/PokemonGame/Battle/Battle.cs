@@ -145,7 +145,7 @@ namespace PokemonGame.Battle
             }
 
             ChangePlayerBattlerIndex(0, true);
-            ChangeOpponentEnemyBattlerIndex(0, true);
+            ChangeOpponentBattlerIndex(0, true);
 
             DialogueManager.instance.DialogueEnded += DialogueEnded;
             playerParty.PartyAllDefeated += PlayerPartyAllDefeated;
@@ -207,7 +207,12 @@ namespace PokemonGame.Battle
 
         public void BattlerFainted(EventArgs e, Battler defeated)
         {
-            Debug.Log(defeated);
+            uiManager.ShrinkOpponentBattler();
+            
+            turnItemQueue.Add(TurnItem.OpponentSwapBecauseFainted);
+            turnItemQueue.Remove(TurnItem.OpponentMove);
+            
+            QueDialogue($"{defeated.name} Fainted!");
             
             int exp = expCalculator.GetExperienceFromDefeatingBattler(defeated, true, battlersThatParticipated.Count);
 
@@ -241,12 +246,14 @@ namespace PokemonGame.Battle
                         uiManager.UpdateBattlerMoveDisplays();
                         if (trainerBattle)
                         {
-                            enemyAI.AIMethod(new AIMethodEventArgs(opponentCurrentBattler, opponentParty));
+                            enemyAI.AIMethod(new AIMethodEventArgs(opponentCurrentBattler, opponentParty,
+                                ExternalBattleData.Construct(this)));
                         }
                         else
                         {
                             Debug.Log("Asking wild pokemon function to run");
-                            EnemyAIMethods.WildPokemon(new AIMethodEventArgs(opponentCurrentBattler, opponentParty));
+                            EnemyAIMethods.WildPokemon(new AIMethodEventArgs(opponentCurrentBattler, opponentParty,
+                                ExternalBattleData.Construct(this)));
                         }
                         hasDoneChoosingUpdate = true;
                         Debug.Log("Setting swapped to false");
@@ -334,6 +341,10 @@ namespace PokemonGame.Battle
                             PlayerUseItem(_battlerToUseItemOn, _useItemOnPlayerParty);
                             break;
                         case TurnItem.OpponentSwap:
+                            OpponentSwitchBattler();
+                            break;
+                        case TurnItem.OpponentSwapBecauseFainted:
+                            OpponentSwitchBattler();
                             break;
                         case TurnItem.StartOfTurnStatusEffects:
                             RunStartOfTurnStatusEffects();
@@ -532,6 +543,11 @@ namespace PokemonGame.Battle
             Bag.Used(_playerItemToUse);
             
             QueDialogue($"You used {_playerItemToUse.name} on {battleBeingUsedOn.name}!");
+
+            if (!e.success)
+            {
+                QueDialogue("But it failed!");
+            }
         }
 
         public void ChooseToSwap(int newBattlerIndex)
@@ -552,6 +568,7 @@ namespace PokemonGame.Battle
 
         private void BeginSwapPlayerBattler()
         {
+            uiManager.ShrinkPlayerBattler();
             uiManager.SwitchBattlerBecauseOfDeath();
         }
 
@@ -582,7 +599,7 @@ namespace PokemonGame.Battle
             uiManager.UpdatePlayerBattlerDetails();
         }
 
-        private void ChangeOpponentEnemyBattlerIndex(int index, bool skipShrink = false)
+        private void ChangeOpponentBattlerIndex(int index, bool skipShrink = false)
         {
             if (!skipShrink)
             {
@@ -622,6 +639,20 @@ namespace PokemonGame.Battle
             _playerSwappedThisTurn = true;
             
             QueDialogue($"Go ahead {playerParty[_playerSwapIndex].name}!", true);
+        }
+
+        private void OpponentSwitchBattler()
+        {
+            AISwitchEventArgs e =
+                new AISwitchEventArgs(opponentBattlerIndex, opponentParty, ExternalBattleData.Construct(this));
+            
+            enemyAI.AISwitchMethod(e);
+
+            ChangeOpponentBattlerIndex(e.newBattlerIndex, true);
+            
+            uiManager.UpdateOpponentBattlerDetails();
+            
+            QueDialogue($"Opponent sent out {opponentParty[e.newBattlerIndex].name}!", true);
         }
 
         private void PlayerParalysed()

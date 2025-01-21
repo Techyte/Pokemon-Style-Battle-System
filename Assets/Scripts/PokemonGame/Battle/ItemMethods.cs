@@ -11,17 +11,29 @@ namespace PokemonGame.Battle
     {
         public void Potion(ItemMethodEventArgs e)
         {
-            e.target.Heal(20);
+            if (!e.target.isFainted)
+            {
+                e.target.Heal(20);
+                e.success = true;
+            }
         }
         
         public void Revive(ItemMethodEventArgs e)
         {
-            e.target.Revive(false);
+            if (e.target.isFainted)
+            {
+                e.target.Revive(false);
+                e.success = true;
+            }
         }
         
         public void MaxRevive(ItemMethodEventArgs e)
         {
-            e.target.Revive(true);
+            if (e.target.isFainted)
+            {
+                e.target.Revive(true);
+                e.success = true;
+            }
         }
     }   
 }

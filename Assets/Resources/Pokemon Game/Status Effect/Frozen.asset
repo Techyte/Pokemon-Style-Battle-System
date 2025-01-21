@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53a3ecee5adf23c42af052e4246e08d2, type: 3}
-  m_Name: Paralysed
+  m_Name: Frozen
   m_EditorClassIdentifier: 
-  name: Paralysed
-  colour: {r: 1, g: 0.96941197, b: 0, a: 1}
+  name: Frozen
+  colour: {r: 0, g: 0.7249274, b: 1, a: 1}
   triggers: []
